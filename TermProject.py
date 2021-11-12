@@ -18,8 +18,11 @@ import math
 # 1. 변수의 개수(n)를 입력한다 (1, 2, 3)
 #num_of_variables = int(input("변수의 개수를 입력하세요 : ")) # 숫자만 입력하는 것 알아보기
 # 2. 행렬 A를 입력한다. - square matrix
-matrix_X = np.array([[-3, math.sqrt(2)], [math.sqrt(2), -2]])
-# 3. 행렬 A의 eigenvalue를 구한다. 복소수가 나올 수 있기 때문에 직접 계산
+#matrix_X = np.array([[-3, math.sqrt(2)], [math.sqrt(2), -2]])
+matrix_X = np.array([[1, 1], [1, 1]])
+
+# 3. 행렬 A의 eigenvalue를 구한다. 복소수가 나올 수 있기 때문에 직접 계산, eigenValue는 잘 나오는것 같음
+# 근데 eigenvector가 왜인지 모르겠는데 자꾸 부호가 반대로 나옴
 def Get_EigenValue():
     eigenvalue1 = -1
     eigenvalue2 = -4
@@ -36,32 +39,52 @@ def Third_Degree_Root_Formula():
 r1, r2 = Get_EigenValue()
 
 #eigenvector은 내가 구하자 계산하기 편한 값이 안나온다.
-w, v = np.linalg.eig(matrix_X)
-print(w)
+eigenValue, eigenVector = np.linalg.eig(matrix_X)
+#eigenVector 조정
+std1 = eigenVector[0][0]
+std2 = eigenVector[1][0]
+eigenVector[0] /= std1
+eigenVector[1] /= std2
+print(eigenVector)
+print(eigenValue)
 
-c1 = 10
-c2 = -10
 t = 1.0     #시작을 int로 실수로 해서 계산이 아래 계산이 안됐다.
 
 # 모든t에 대해 그래프를 그리는데 c1, c2는 고정
 # 7. x1(t) = c1 * Z1 * e^r1t + c2 * W1 * e^r2t
 # 7. x2(t) = c1 * Z2 * e^r1t + c2 * W2 * e^r2t
 
-for t in np.arange(-100, 100, 0.1):
-    general_soln1 = c1 * 1 * math.exp(t * w[1]) + c2 * -(2**(1/2)) * math.exp(t * w[0])
-    general_soln2 = c1 * 2**(1/2) * math.exp(t * w[1]) + c2 * 1 * math.exp(t * w[0])
-    print(t)
+#2차일 경우에만
+def DragTrajectory(c1, c2):
+    x1Data = list()
+    x2Data = list()
 
-    plt.scatter(general_soln1, general_soln2)
+    #데이터 대입
+    for t in np.arange(-100, 100, 0.1):
+        
+        x1temp = c1 * eigenVector[1][0] * math.exp(t * eigenValue[1]) + c2 * eigenVector[0][0] * math.exp(t * eigenValue[0])
+        x2temp = c1 * eigenVector[1][1] * math.exp(t * eigenValue[1]) + c2 * eigenVector[0][1] * math.exp(t * eigenValue[0])
+        
+        #그래프의 범위에 맞는지 확인
+        # if(abs(x1temp) > 100 and abs(x2temp) > 150):
+        #     continue
+        
+        x1Data.append(x1temp)
+        x2Data.append(x2temp)
 
-#그리드 활성화
-plt.grid(True, linestyle = '--')
-#축 범위
-plt.xlim([-10**2, 10**2])
-plt.ylim([-10**2, 10**2])
-
-
+    #그리드 활성화
+    plt.grid(True, linestyle = '--')
+    #축 범위
+    plt.xlim([-5, 5])       #범위가 너무 넓으면 직선처럼 보여서 적당한 범위 찾기
+    plt.ylim([-5, 5])
+    plt.plot(x1Data, x2Data)
+    
+#c1, c2에 대해 그리기
+for i in range(-3, 3):
+    for j in range(-3, 3):
+        DragTrajectory(i, j)
+        
+        
 plt.show()
-print(math.exp(2))
 
 
