@@ -19,7 +19,7 @@ import math
 #num_of_variables = int(input("변수의 개수를 입력하세요 : ")) # 숫자만 입력하는 것 알아보기
 # 2. 행렬 A를 입력한다. - square matrix
 #matrix_X = np.array([[-3, math.sqrt(2)], [math.sqrt(2), -2]])
-matrix_X = np.array([[1, 1], [1, 1]])
+matrix_X = np.array([[1, 2], [3, 4]])
 
 # 3. 행렬 A의 eigenvalue를 구한다. 복소수가 나올 수 있기 때문에 직접 계산, eigenValue는 잘 나오는것 같음
 # 근데 eigenvector가 왜인지 모르겠는데 자꾸 부호가 반대로 나옴
@@ -28,7 +28,7 @@ def Get_EigenValue():
     eigenvalue2 = -4
     return eigenvalue1, eigenvalue2
 
-#2차, 3차 근의 공식
+#2차, 3차 근의 공식 혹시 내가 eigenvalue 구해야 할때 사용 할 것
 def Second_Degree_Root_Formula():
     root = 0
     return root
